@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2024-06-22
+
+### Added
+- WriterTransformer implementation for logging differentiable computations
+- LoggedOperation type for tracking results with associated logs
+- Binary operation logging with input/output tracking
+- Utilities for filtering and formatting logs
+- Timestamp formatting for sequential operation tracing
+- Examples demonstrating logger usage with polynomial functions
+
+### Improved
+- Enhanced debugging capabilities with structured logging
+- Better visualization of computation steps
+- More examples of tracking differentiable operations
+
 ## [0.7.0] - 2024-06-21
 
 ### Added

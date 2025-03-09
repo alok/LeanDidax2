@@ -63,7 +63,15 @@ LeanDidax2 is a pedagogical implementation of automatic differentiation inspired
    - Error recovery strategies and fallback mechanisms
    - Domain validation for numerical stability
 
-10. **Utility Functions** (`Utils.lean`)
+10. **Logging** (`WriterTransformer.lean`)
+   - LoggedOperation type for tracking results with associated logs
+   - Operation-level logging of inputs and outputs
+   - Detailed trace visualization for computation pipelines
+   - Filtering and formatting utilities for logs
+   - Timestamp simulation for sequential operation tracing
+   - Examples of integrating logging with differentiable computations
+
+11. **Utility Functions** (`Utils.lean`)
    - Additional type instances and conversions
    - Debugging utilities for transformations
    - Enhanced integration between monads and transformers
@@ -102,6 +110,8 @@ LeanDidax2/
 ├── StateTransformerExamples.lean # Examples of stateful computation
 ├── ExceptTransformer.lean # Exception handling for differentiable computation
 ├── ExceptTransformerExamples.lean # Examples of error handling
+├── WriterTransformer.lean # Logging utilities for computation tracing
+├── WriterTransformerExamples.lean # Examples of logging and tracing
 ├── Utils.lean             # Utility functions and instances
 └── Examples.lean          # General examples of autodiff
 ```
@@ -263,6 +273,45 @@ def riskyFunction (x : Value Float) : DiffExceptT (Value Float) := do
   -- Run with a default value for errors
   let withDefault := tryWithDefault (riskyFunction (seed 1.0)) { primal := 0, tangent := 0 }
   IO.println s!"Result with default = {runDiff withDefault}"
+```
+
+## Logging Example
+
+```lean
+import LeanDidax2.WriterTransformer
+import LeanDidax2.Basic
+
+open LeanDidax2.WriterTransformer
+
+-- Define a polynomial function with logging
+def loggedPolynomial (x : Value Float) : Monadic.DiffM (LoggedOperation (Value Float)) := do
+  -- Log each operation
+  let x² ← loggedOp "square" x x (fun a b => a * b)
+  let term2 ← loggedOp "2x" (constValue 2.0) x (fun a b => a * b)
+  let sum ← loggedOp "x² + 2x" x².result term2.result (fun a b => a + b)
+  let result ← loggedOp "sum + 1" sum.result (constValue 1.0) (fun a b => a + b)
+  
+  -- Combine all logs
+  let allLogs := #["Computing f(x) = x² + 2x + 1"] ++
+                 x².logs ++
+                 term2.logs ++
+                 sum.logs ++
+                 result.logs
+  
+  pure {
+    result := result.result,
+    logs := allLogs
+  }
+
+-- Run the computation and analyze the logs
+#eval
+  let computation := loggedPolynomial (seed 3.0)
+  runDiffWithLogsIO computation (fun result logs => do
+    IO.println s!"Result: {result.primal}" 
+    IO.println s!"Gradient: {result.tangent}"
+    IO.println "Operation trace:"
+    IO.println (formatLogs logs)
+  )
 ```
 
 ## Future Improvements
