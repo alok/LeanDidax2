@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2024-06-21
+
+### Added
+- ExceptTransformer implementation for error handling in differentiable computations
+- DiffError type with domain, arithmetic, and numerical error variants
+- Safe mathematical operations (safelog, safediv, safesqrt) that handle domain errors
+- Error handling utilities including tryWithDefault and catchDomain
+- Integration of state and error handling with DiffExceptStateT
+- Comprehensive examples demonstrating error handling in differentiable computations
+
+### Improved
+- Enhanced domain validation for mathematical operations
+- Better debugging of numerical instabilities in computations
+- More comprehensive error reporting with structured error types
+- Safer composable transformations that handle edge cases gracefully
+
 ## [0.6.0] - 2024-06-20
 
 ### Added

@@ -55,7 +55,15 @@ LeanDidax2 is a pedagogical implementation of automatic differentiation inspired
    - Bridging between differentiable computations and IO
    - Debugging utilities with rich state information
 
-9. **Utility Functions** (`Utils.lean`)
+9. **Error Handling** (`ExceptTransformer.lean`)
+   - ExceptT monad transformer for domain error handling
+   - Safe mathematical operations with explicit error handling
+   - DiffError type hierarchy for structured error reporting
+   - Integration with state transformers for combined effects
+   - Error recovery strategies and fallback mechanisms
+   - Domain validation for numerical stability
+
+10. **Utility Functions** (`Utils.lean`)
    - Additional type instances and conversions
    - Debugging utilities for transformations
    - Enhanced integration between monads and transformers
@@ -72,6 +80,7 @@ LeanDidax2 is a pedagogical implementation of automatic differentiation inspired
 - **Extensive Examples**: Each feature is accompanied by examples demonstrating its usage
 - **Monad Transformers**: Use of monad transformer stack for composable effects
 - **Stateful Computation**: Supporting stateful operations while maintaining functional purity
+- **Error Handling**: Comprehensive error handling with domain validation and recovery
 
 ## Project Structure
 
@@ -91,6 +100,8 @@ LeanDidax2/
 ├── MonadTransformerExamples.lean # Examples of transformer usage
 ├── StateTransformer.lean  # State transformer implementation
 ├── StateTransformerExamples.lean # Examples of stateful computation
+├── ExceptTransformer.lean # Exception handling for differentiable computation
+├── ExceptTransformerExamples.lean # Examples of error handling
 ├── Utils.lean             # Utility functions and instances
 └── Examples.lean          # General examples of autodiff
 ```
@@ -101,11 +112,12 @@ LeanDidax2/
 2. **Monad Transformers**: Stacking monadic effects for composable transformations
 3. **MonadLift**: Type-safe lifting of computations between monads
 4. **StateT Monad**: Managing state in pure functional computations
-5. **Typeclasses**: Extensively used for operator overloading and type constraints
-6. **Higher-Order Functions**: Functions that take functions as arguments
-7. **Pure Functions**: No side effects in the differentiation system
-8. **Composition**: Building complex operations from simpler ones
-9. **Immutable Data**: All operations create new values rather than modifying existing ones
+5. **ExceptT Monad**: Error handling in pure functional computations
+6. **Typeclasses**: Extensively used for operator overloading and type constraints
+7. **Higher-Order Functions**: Functions that take functions as arguments
+8. **Pure Functions**: No side effects in the differentiation system
+9. **Composition**: Building complex operations from simpler ones
+10. **Immutable Data**: All operations create new values rather than modifying existing ones
 
 ## Lean 4 Specific Features
 
@@ -225,6 +237,34 @@ def polynomialWithState (x : Float) : DiffStateT ADState (Value Float) := do
   )
 ```
 
+## Error Handling Example
+
+```lean
+import LeanDidax2.ExceptTransformer
+import LeanDidax2.StateTransformer
+
+open LeanDidax2.ExceptTransformer
+open LeanDidax2.StateTransformer
+
+-- Define a potentially unsafe computation
+def riskyFunction (x : Value Float) : DiffExceptT (Value Float) := do
+  -- This will fail for inputs that make the logarithm argument negative
+  let result ← safelog (x * x - constValue 4.0)
+  pure (result * constValue 2.0)
+
+-- Example of handling errors with different strategies
+#eval
+  -- Run with proper error handling
+  runDiffExceptIO
+    (riskyFunction (seed 3.0))
+    (fun result => IO.println s!"Success! Result = {result}")
+    (fun error => IO.println s!"Failed: {error}")
+    
+  -- Run with a default value for errors
+  let withDefault := tryWithDefault (riskyFunction (seed 1.0)) { primal := 0, tangent := 0 }
+  IO.println s!"Result with default = {runDiff withDefault}"
+```
+
 ## Future Improvements
 
 1. **Performance Optimizations**: Further optimize array operations
@@ -236,7 +276,9 @@ def polynomialWithState (x : Float) : DiffStateT ADState (Value Float) := do
 7. **Higher-kinded Typeclasses**: More advanced typeclass abstractions
 8. **Profiling Integration**: Runtime performance monitoring
 9. **Automatic Checkpointing**: Memory optimization for large computations
+10. **Extended Error Handling**: More sophisticated error recovery mechanisms
+11. **Numerical Stability**: Advanced techniques for maintaining computational stability
 
 ## Conclusion
 
-LeanDidax2 demonstrates how automatic differentiation can be implemented in a pure functional language like Lean 4. By following the design principles of JAX, it provides an educational resource for understanding how modern autodiff systems work, while showcasing the expressive power of functional programming and dependent types. The addition of monad transformers, state transformers, and integration with Lean's standard library further illustrates how complex transformations can be composed in a modular and type-safe manner. 
+LeanDidax2 demonstrates how automatic differentiation can be implemented in a pure functional language like Lean 4. By following the design principles of JAX, it provides an educational resource for understanding how modern autodiff systems work, while showcasing the expressive power of functional programming and dependent types. The addition of monad transformers, state transformers, exception handling, and integration with Lean's standard library further illustrates how complex transformations can be composed in a modular and type-safe manner. 
