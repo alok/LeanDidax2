@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2024-06-20
+
+### Added
+- StateTransformer implementation using Lean's built-in StateT monad transformer
+- ADState tracking for detailed operation monitoring
+- Bridge between differentiable computations and IO
+- Helper functions for traceable differentiable operations
+- Operation history collection for debugging
+
+### Improved
+- Integration with standard library monad transformers
+- Better separation of differentiable computation from IO
+- More comprehensive examples of stateful computation
+- Enhanced debugging capabilities
+
 ## [0.5.0] - 2024-06-19
 
 ### Added

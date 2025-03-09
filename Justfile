@@ -17,6 +17,7 @@ run-examples:
     lake env lean --run LeanDidax2/ControlFlowExamples.lean
     lake env lean --run LeanDidax2/MonadicExamples.lean
     lake env lean --run LeanDidax2/MonadTransformerExamples.lean
+    lake env lean --run LeanDidax2/StateTransformerExamples.lean
 
 # Run specific example files
 run-basic-examples:
@@ -36,6 +37,9 @@ run-monadic-examples:
 
 run-transformer-examples:
     lake env lean --run LeanDidax2/MonadTransformerExamples.lean
+
+run-state-examples:
+    lake env lean --run LeanDidax2/StateTransformerExamples.lean
 
 # Clean build artifacts
 clean:

@@ -48,7 +48,14 @@ LeanDidax2 is a pedagogical implementation of automatic differentiation inspired
    - Function composition utilities
    - Configurable debugging for transformations
 
-8. **Utility Functions** (`Utils.lean`)
+8. **State Transformers** (`StateTransformer.lean`)
+   - StateT integration for stateful differentiable computations
+   - Operation tracking and history collection
+   - Performance monitoring and statistics gathering
+   - Bridging between differentiable computations and IO
+   - Debugging utilities with rich state information
+
+9. **Utility Functions** (`Utils.lean`)
    - Additional type instances and conversions
    - Debugging utilities for transformations
    - Enhanced integration between monads and transformers
@@ -64,6 +71,7 @@ LeanDidax2 is a pedagogical implementation of automatic differentiation inspired
 - **Modular Design**: Each component is isolated in its own module with clear interfaces
 - **Extensive Examples**: Each feature is accompanied by examples demonstrating its usage
 - **Monad Transformers**: Use of monad transformer stack for composable effects
+- **Stateful Computation**: Supporting stateful operations while maintaining functional purity
 
 ## Project Structure
 
@@ -81,6 +89,8 @@ LeanDidax2/
 ├── MonadicExamples.lean   # Examples of monadic usage
 ├── MonadTransformer.lean  # Monad transformer implementation
 ├── MonadTransformerExamples.lean # Examples of transformer usage
+├── StateTransformer.lean  # State transformer implementation
+├── StateTransformerExamples.lean # Examples of stateful computation
 ├── Utils.lean             # Utility functions and instances
 └── Examples.lean          # General examples of autodiff
 ```
@@ -90,11 +100,12 @@ LeanDidax2/
 1. **Functors and Monads**: Used for chaining differentiable computations
 2. **Monad Transformers**: Stacking monadic effects for composable transformations
 3. **MonadLift**: Type-safe lifting of computations between monads
-4. **Typeclasses**: Extensively used for operator overloading and type constraints
-5. **Higher-Order Functions**: Functions that take functions as arguments
-6. **Pure Functions**: No side effects in the differentiation system
-7. **Composition**: Building complex operations from simpler ones
-8. **Immutable Data**: All operations create new values rather than modifying existing ones
+4. **StateT Monad**: Managing state in pure functional computations
+5. **Typeclasses**: Extensively used for operator overloading and type constraints
+6. **Higher-Order Functions**: Functions that take functions as arguments
+7. **Pure Functions**: No side effects in the differentiation system
+8. **Composition**: Building complex operations from simpler ones
+9. **Immutable Data**: All operations create new values rather than modifying existing ones
 
 ## Lean 4 Specific Features
 
@@ -105,6 +116,7 @@ LeanDidax2/
 5. **Unicode Support**: Using mathematical symbols where appropriate
 6. **Typeclass Inheritance**: Building a hierarchy of mathematical operations
 7. **MonadLift**: Standard library integration for transformers
+8. **Built-in Monad Transformers**: Using StateT and ReaderT from the standard library
 
 ## JAX Concepts Implemented
 
@@ -115,6 +127,7 @@ LeanDidax2/
 5. **Compositionality**: Building complex transforms from simple ones
 6. **Function Transformations**: JAX-like function transformation with composition
 7. **Transformation Metadata**: Similar to JAX's transformation tracing
+8. **Stateful Computations**: Supporting stateful tracking and debugging
 
 ## Usage Example
 
@@ -181,6 +194,37 @@ def configuredFunction : DiffReaderT ADConfig Float := do
    s!"Result with custom config: {result2}")
 ```
 
+## State Transformer Example
+
+```lean
+import LeanDidax2.StateTransformer
+import LeanDidax2.Utils
+
+open LeanDidax2.StateTransformer
+open LeanDidax2.Utils
+
+-- Define a stateful computation
+def polynomialWithState (x : Float) : DiffStateT ADState (Value Float) := do
+  setTracing true
+  let xv := seed x
+  trackOp "seed"
+  
+  let x_squared ← trackedOp "multiply" xv xv (fun a b => a * b)
+  let two_x ← trackedOp "multiply" (constValue 2.0) xv (fun a b => a * b)
+  let result ← trackedOp "add" x_squared two_x (fun a b => a + b)
+  
+  pure result
+
+-- Run the computation and get both result and operation history
+#eval
+  let initialState : ADState := {}
+  runDiffStateIO initialState (polynomialWithState 3.0) (fun result state => do
+    IO.println s!"Result: {result}"
+    IO.println s!"Operations tracked: {state.opCount}"
+    IO.println s!"Max tangent: {state.maxTangent}"
+  )
+```
+
 ## Future Improvements
 
 1. **Performance Optimizations**: Further optimize array operations
@@ -191,7 +235,8 @@ def configuredFunction : DiffReaderT ADConfig Float := do
 6. **More Transformations**: Additional JAX-like transformations (jit, pmap, etc.)
 7. **Higher-kinded Typeclasses**: More advanced typeclass abstractions
 8. **Profiling Integration**: Runtime performance monitoring
+9. **Automatic Checkpointing**: Memory optimization for large computations
 
 ## Conclusion
 
-LeanDidax2 demonstrates how automatic differentiation can be implemented in a pure functional language like Lean 4. By following the design principles of JAX, it provides an educational resource for understanding how modern autodiff systems work, while showcasing the expressive power of functional programming and dependent types. The addition of monad transformers and integration with Lean's standard library further illustrates how complex transformations can be composed in a modular and type-safe manner. 
+LeanDidax2 demonstrates how automatic differentiation can be implemented in a pure functional language like Lean 4. By following the design principles of JAX, it provides an educational resource for understanding how modern autodiff systems work, while showcasing the expressive power of functional programming and dependent types. The addition of monad transformers, state transformers, and integration with Lean's standard library further illustrates how complex transformations can be composed in a modular and type-safe manner. 
