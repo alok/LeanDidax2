@@ -1,0 +1,19 @@
+# LeanDidax Linter Configuration
+
+# Enable all linters by default
+set_option linter true
+
+# Disable specific linters that are too noisy for our project
+set_option linter.unusedVariables true
+set_option linter.deprecationMessage true
+
+# Enable more strict checking
+set_option linter.missingDocs true
+set_option linter.unusedVariables.funArgs true
+
+# Configure type checking
+set_option pp.explicit true
+set_option pp.universes false
+
+# Configure warning levels
+set_option warningAsError false 
