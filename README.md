@@ -1,3 +1,5 @@
+(This is 100% vibe coded by AI)
+
 # LeanDidax
 
 A pedagogical implementation of automatic differentiation in Lean 4, inspired by JAX's Autodidax tutorial.
