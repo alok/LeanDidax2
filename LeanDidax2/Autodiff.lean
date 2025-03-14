@@ -29,7 +29,7 @@ def numericGradient
   [HMul Float α α] -- Float * α -> α
   (f : α → α) (x : α) (h : Float := 1e-5) : α :=
   let step := h * x
-  (f (x + step) - f (x-step)) / (step + step)
+  (f (x + step) - f (x - step)) / (step + step)
 
 end ForwardMode
 
