@@ -17,6 +17,8 @@ import LeanDidax2.ExceptTransformer
 import LeanDidax2.WriterTransformer
 import LeanDidax2.Utils
 import LeanDidax2.Jaxpr
+import LeanDidax2.Jit
+import LeanDidax2.JitExamples
 -- Example modules are not imported here to avoid main function conflicts.
 -- They can be run directly using:
 --   lake env lean --run LeanDidax2/Examples.lean
@@ -28,6 +30,7 @@ import LeanDidax2.Jaxpr
 --   lake env lean --run LeanDidax2/StateTransformerExamples.lean
 --   lake env lean --run LeanDidax2/ExceptTransformerExamples.lean
 --   lake env lean --run LeanDidax2/WriterTransformerExamples.lean
+--   lake env lean --run LeanDidax2/JitExamples.lean
 
 /-
   LeanDidax2 implements an automatic differentiation system in Lean 4,
@@ -45,6 +48,42 @@ import LeanDidax2.Jaxpr
   - Exception handling for error management (ExceptTransformer.lean)
   - Logging utilities for operation tracing (WriterTransformer.lean)
   - Utility functions and instances (Utils.lean)
+  - Jaxpr intermediate representation (Jaxpr.lean)
+  - JIT compilation functionality (Jit.lean)
 
   Each component includes example files demonstrating its usage.
 -/
+
+namespace LeanDidax2
+
+/-!
+  # LeanDidax2
+
+  This library provides a Lean 4 implementation of JAX-style automatic differentiation.
+  It includes both forward-mode and reverse-mode differentiation, as well as support
+  for batching, control flow, and JIT compilation.
+
+  ## Features
+
+  * Forward-mode autodiff with dual numbers
+  * Reverse-mode autodiff using computational graphs
+  * Batch processing via the `vmap` transformation
+  * Differentiable control flow primitives (`cond`, `switch`, and `select`)
+  * Custom derivative rules for user-defined functions
+  * JIT compilation for staged computation (inspired by JAX's Part 3)
+
+  ## Main modules:
+
+  * `Basic`: Core types and operations
+  * `Autodiff`: Forward-mode and reverse-mode differentiation
+  * `Batch`: Vectorized operations with `vmap`
+  * `ControlFlow`: Differentiable control flow primitives
+  * `CustomRules`: Define custom derivative rules
+  * `Jaxpr`: Intermediate representation for JIT and transforms
+  * `Jit`: Just-in-time compilation
+-/
+
+/-- LeanDidax2 version number. -/
+def version : String := "0.3.0"
+
+end LeanDidax2
