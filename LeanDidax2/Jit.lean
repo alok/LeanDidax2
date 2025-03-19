@@ -44,6 +44,10 @@ structure Env where
 -/
 def Env.empty : Env := { vars := Std.HashMap.empty }
 
+@[inherit_doc Env.empty]
+instance : EmptyCollection Env where
+  emptyCollection := Env.empty
+
 /--
   Set a variable in the environment
 -/
