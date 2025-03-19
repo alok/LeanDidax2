@@ -20,6 +20,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Better visualization of computation steps
 - More examples of tracking differentiable operations
 
+## [0.8.1] - 2024-06-24
+
+### Changed
+- Refactored `mkX` functions to use `X.mk` directly
+
+### Changed
+- Removed redundant `mkX` wrapper functions in favor of direct structure constructors
+  - Eliminated `mkVar`, `mkLit`, `mkEqn`, and `mkJaxpr` in Jaxpr.lean
+  - Renamed `mkRegistry` to `emptyRegistry` in CustomRules.lean
+- Improved code consistency by using standard constructor patterns
+
+### Improved
+- Enhanced code readability and maintainability
+- Better alignment with Lean 4 idioms
+
 ## [0.7.0] - 2024-06-21
 
 ### Added
@@ -130,4 +145,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reverse-mode gradient using computational graph
 
 ### Fixed
-- Corrected derivative calculation for composite functions 
+- Corrected derivative calculation for composite functions
+
+## [Unreleased]
+
+### Changed
+- Merged all Jaxpr files into a single file: `LeanDidax2/Jaxpr.lean`
+- Combined duplicate functionality while maintaining backward compatibility
+- Added alternative naming functions to ensure all previous functionality is preserved 

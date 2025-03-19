@@ -1,9 +1,16 @@
 name = "LeanDidax2"
 version = "0.1.0"
-defaultTargets = ["leandidax2"]
+
+
+
+[[require]]
+name = "plausible"
+git = "https://github.com/leanprover-community/plausible"
+rev = "main"
 
 [[lean_lib]]
 name = "LeanDidax2"
+root = "LeanDidax2"
 
 [[lean_exe]]
 name = "leandidax2"

@@ -16,7 +16,7 @@ import LeanDidax2.StateTransformer
 import LeanDidax2.ExceptTransformer
 import LeanDidax2.WriterTransformer
 import LeanDidax2.Utils
-
+import LeanDidax2.Jaxpr
 -- Example modules are not imported here to avoid main function conflicts.
 -- They can be run directly using:
 --   lake env lean --run LeanDidax2/Examples.lean

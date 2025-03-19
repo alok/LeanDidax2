@@ -39,7 +39,10 @@ def Registry (α β : Type) := List (String × CustomRule α β)
 /--
   Create an empty registry.
 -/
-def mkRegistry {α β : Type} : Registry α β := []
+def emptyRegistry {α β : Type} : Registry α β := []
+
+instance : EmptyCollection (Registry α β) where
+  emptyCollection := emptyRegistry
 
 /--
   Register a new custom rule.
@@ -59,7 +62,7 @@ def lookupRule {α β : Type} (registry : Registry α β) (name : String) : Opti
   Example registry for common mathematical functions on Float.
 -/
 def floatRegistry : Registry Float Float :=
-  let registry := mkRegistry
+  let registry : Registry Float Float := []
 
   -- Custom rule for x^2
   let square : CustomRule Float Float := {
