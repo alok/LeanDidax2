@@ -18,8 +18,7 @@ namespace ForwardMode
   Given a function and an input with its tangent, computes the output and its tangent.
 -/
 def jvp {α β : Type} (f : Value α → Value β) (x : Value α) (dx : α) : Value β :=
-  let x' := { primal := x.primal, tangent := dx }
-  f x'
+  f { primal := x.primal, tangent := dx }
 
 /--
   Numerical derivative approximation (for testing purposes).
@@ -30,7 +29,7 @@ def numericGradient
   [HMul Float α α] -- Float * α -> α
   (f : α → α) (x : α) (h : Float := 1e-5) : α :=
   let step := h * x
-  (f (x + step) - f (x-step)) / (step + step)
+  (f (x + step) - f (x - step)) / (step + step)
 
 end ForwardMode
 
